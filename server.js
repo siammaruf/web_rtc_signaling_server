@@ -23,3 +23,5 @@ const PORT = process.env.PORT || 3500;
 server.listen(PORT,()=>{
     console.log(`Listening on *: ${PORT}`);
 })
+
+module.exports = app;
