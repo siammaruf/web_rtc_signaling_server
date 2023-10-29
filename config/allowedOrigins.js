@@ -1,6 +1,6 @@
 const allowedOrigins = [
     'http://localhost:8008',
-    'https://web-rtc-signaling-server.onrender.com/'
+    'http://localhost:8800/'
 ]
 
 module.exports = allowedOrigins
