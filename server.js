@@ -1,20 +1,11 @@
 require('dotenv').config();
-//const cors = require("cors");
 const express = require("express");
+const corsOptions = require("./config/corsOptions")
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server,{
-    cors:{
-        origin:"https://cofixer.xyz",
-        credentials: false
-    }
-});
-//const corsOption = require("./config/corsOptions");
-
-// Cross Origin Resource Sharing
-//app.use(cors(corsOption))
+const io = new Server(server, corsOptions);
 
 app.get("/", (req, res)=>{
     res.send('<h1>Signaling Server is running</h1>')
