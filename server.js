@@ -18,7 +18,7 @@ app.get("/", (req, res)=>{
 const emailToSocketIdMap = new Map();
 const socketIdToEmailMap = new Map();
 
-io.on("connection", (socket)=>{
+io.on("connect", (socket)=>{
     console.log(`Socket Connected`, socket.id);
 
     // socket.on("room:join", (data) => {

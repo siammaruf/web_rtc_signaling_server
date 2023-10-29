@@ -1,6 +1,6 @@
 const allowedOrigins = [
     'http://localhost:8008',
-    'http://localhost:8800/'
+    'https://cofixer.xyz'
 ]
 
 module.exports = allowedOrigins
