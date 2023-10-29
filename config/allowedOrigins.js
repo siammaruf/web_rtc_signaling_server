@@ -1,5 +1,5 @@
 const allowedOrigins = [
-    'http://localhost:8008',
+    'http://127.0.0.1:8800',
     'https://cofixer.xyz'
 ]
 

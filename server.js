@@ -9,7 +9,9 @@ const io = new Server(server);
 const corsOption = require("./config/corsOptions");
 
 // Cross Origin Resource Sharing
-app.use(cors(corsOption))
+app.use(cors({
+    origin:"*"
+}))
 
 app.get("/", (req, res)=>{
     res.send('<h1>Signaling Server is running</h1>')
