@@ -28,6 +28,7 @@ io.on("connection", (socket)=>{
         socket.join(room);
         io.to(socket.id).emit("room:join", data);
         io.to(room).emit("user:joined", socketIdToUserMap);
+        console.log(socketIdToUserMap)
     });
 
     socket.on("user:call", ({ to, offer }) => {
