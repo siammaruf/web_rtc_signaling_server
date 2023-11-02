@@ -17,13 +17,19 @@ const joinedUsers = [];
 
 io.on("connection", (socket)=>{
     console.log(`Socket Connected`, socket.id);
-    socket.emit("con:test",socket.id);
+    
+    socket.on("disconnect", (reason) => {
+        console.log("Client Discunected !")
+    });
 
     socket.on("room:join", (data) => {
         const { user, room } = data;
 
         userToSocketIdMap.set(user, socket.id);
         socketIdToUserMap.set(socket.id, user);
+
+
+
         joinedUsers.push({"user": user, "id":socket.id})
 
         //io.to(room).emit("user:joined", { user, id:socket.id });
