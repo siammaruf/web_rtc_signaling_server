@@ -13,6 +13,7 @@ app.get("/", (req, res)=>{
 
 const userToSocketIdMap = new Map();
 const socketIdToUserMap = new Map();
+const joinedUsers = [];
 
 io.on("connection", (socket)=>{
     console.log(`Socket Connected`, socket.id);
@@ -23,12 +24,12 @@ io.on("connection", (socket)=>{
 
         userToSocketIdMap.set(user, socket.id);
         socketIdToUserMap.set(socket.id, user);
+        joinedUsers.push({"user": user, "id":socket.id})
 
         //io.to(room).emit("user:joined", { user, id:socket.id });
         socket.join(room);
         io.to(socket.id).emit("room:join", data);
-        io.to(room).emit("user:joined", socketIdToUserMap);
-        console.log(socketIdToUserMap)
+        io.to(room).emit("user:joined", joinedUsers);
     });
 
     socket.on("user:call", ({ to, offer }) => {
