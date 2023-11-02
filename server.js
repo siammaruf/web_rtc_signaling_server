@@ -13,13 +13,16 @@ app.get("/", (req, res)=>{
 
 const userToSocketIdMap = new Map();
 const socketIdToUserMap = new Map();
-const joinedUsers = [];
+let joinedUsers = [];
 
 io.on("connection", (socket)=>{
     console.log(`Socket Connected`, socket.id);
 
     socket.on("disconnect", (reason) => {
-        console.log("Client Discunected !", socket.id)
+        const getIndex = joinedUsers.findIndex((e)=>e.id === socket.id);
+        console.log("Client Discunected of "+getIndex, socket.id)
+        joinedUsers.splice(getIndex,1);
+        console.log(joinedUsers)
     });
 
     socket.on("room:join", (data) => {
@@ -27,9 +30,6 @@ io.on("connection", (socket)=>{
 
         userToSocketIdMap.set(user, socket.id);
         socketIdToUserMap.set(socket.id, user);
-
-
-
         joinedUsers.push({"user": user, "id":socket.id})
 
         //io.to(room).emit("user:joined", { user, id:socket.id });
