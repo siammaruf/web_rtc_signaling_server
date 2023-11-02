@@ -20,9 +20,7 @@ io.on("connection", (socket)=>{
 
     socket.on("disconnect", (reason) => {
         const getIndex = joinedUsers.findIndex((e)=>e.id === socket.id);
-        console.log("Client Discunected of "+getIndex, socket.id)
         joinedUsers.splice(getIndex,1);
-        console.log(joinedUsers)
     });
 
     socket.on("room:join", (data) => {
