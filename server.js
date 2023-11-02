@@ -17,9 +17,9 @@ const joinedUsers = [];
 
 io.on("connection", (socket)=>{
     console.log(`Socket Connected`, socket.id);
-    
+
     socket.on("disconnect", (reason) => {
-        console.log("Client Discunected !")
+        console.log("Client Discunected !", socket.id)
     });
 
     socket.on("room:join", (data) => {
