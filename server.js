@@ -11,26 +11,27 @@ app.get("/", (req, res)=>{
     res.send('<h1>Signaling Server is running</h1>')
 });
 
-const emailToSocketIdMap = new Map();
-const socketIdToEmailMap = new Map();
+const userToSocketIdMap = new Map();
+const socketIdToUserMap = new Map();
 
 io.on("connection", (socket)=>{
     console.log(`Socket Connected`, socket.id);
     socket.emit("con:test",socket.id);
-    
+
     socket.on("room:join", (data) => {
-        const { email, room } = data;
+        const { user, room } = data;
 
-        emailToSocketIdMap.set(email, socket.id);
-        socketIdToEmailMap.set(socket.id, email);
+        userToSocketIdMap.set(user, socket.id);
+        socketIdToUserMap.set(socket.id, user);
 
-        io.to(room).emit("user:joined", { email, id: socket.id });
+        //io.to(room).emit("user:joined", { user, id:socket.id });
         socket.join(room);
         io.to(socket.id).emit("room:join", data);
+        io.to(room).emit("user:joined", socketIdToUserMap);
     });
 
     socket.on("user:call", ({ to, offer }) => {
-        io.to(to).emit("incomming:call", { from: socket.id, offer });
+        io.to(to).emit("incomming:call", { from:socket.id, offer });
     });
 
     socket.on("call:accepted", ({ to, ans }) => {
