@@ -16,11 +16,18 @@ const socketIdToUserMap = new Map();
 let joinedUsers = [];
 
 io.on("connection", (socket)=>{
-    console.log(`Socket Connected`, socket.id);
+    socket.emit("user:connected",socket.id)
 
     socket.on("disconnect", (reason) => {
         const getIndex = joinedUsers.findIndex((e)=>e.id === socket.id);
         joinedUsers.splice(getIndex,1);
+
+        if(joinedUsers.length){
+            joinedUsers.forEach((item)=>{
+                socket.to(item.room).emit("user:joined", joinedUsers)
+            })
+        }
+        
     });
 
     socket.on("room:join", (data) => {
@@ -28,11 +35,16 @@ io.on("connection", (socket)=>{
 
         userToSocketIdMap.set(user, socket.id);
         socketIdToUserMap.set(socket.id, user);
-        joinedUsers.push({"user": user, "id":socket.id})
+        joinedUsers.push({"user": user,"room":room, "id":socket.id})
 
         //io.to(room).emit("user:joined", { user, id:socket.id });
         socket.join(room);
         io.to(socket.id).emit("room:join", data);
+
+        // let mapArr = joinedUsers.map((m)=>[m.id, m]);
+        // let usersMap = new Map(mapArr);
+        // let iterator = usersMap.values();
+        // const uniqueUsers = [...iterator];
         io.to(room).emit("user:joined", joinedUsers);
     });
 
@@ -53,6 +65,14 @@ io.on("connection", (socket)=>{
         console.log("peer:nego:done", ans);
         io.to(to).emit("peer:nego:final", { from: socket.id, ans });
     });
+
+    socket.on("user:msg",(data)=>{
+        io.to(data.socketId).emit("user:reply",{
+            from:data.to,
+            to:data.socketId,
+            message:data.msg
+        })
+    })
 })
 
 const PORT = process.env.PORT || 3500;
