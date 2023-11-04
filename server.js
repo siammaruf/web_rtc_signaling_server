@@ -32,20 +32,21 @@ io.on("connection", (socket)=>{
 
     socket.on("room:join", (data) => {
         const { user, room } = data;
+        const checkUser = joinedUsers.filter(item=>item.user === user);
 
-        userToSocketIdMap.set(user, socket.id);
-        socketIdToUserMap.set(socket.id, user);
-        joinedUsers.push({"user": user,"room":room, "id":socket.id})
-
-        //io.to(room).emit("user:joined", { user, id:socket.id });
-        socket.join(room);
-        io.to(socket.id).emit("room:join", data);
-
-        // let mapArr = joinedUsers.map((m)=>[m.id, m]);
-        // let usersMap = new Map(mapArr);
-        // let iterator = usersMap.values();
-        // const uniqueUsers = [...iterator];
-        io.to(room).emit("user:joined", joinedUsers);
+        if(checkUser.length >= 1){
+            socket.emit("user:exists", checkUser);
+            return false;
+        }else{
+            userToSocketIdMap.set(user, socket.id);
+            socketIdToUserMap.set(socket.id, user);
+            joinedUsers.push({"user": user,"room":room, "id":socket.id})
+    
+            //io.to(room).emit("user:joined", { user, id:socket.id });
+            socket.join(room);
+            io.to(socket.id).emit("room:join", data);
+            io.to(room).emit("user:joined", joinedUsers);
+        }
     });
 
     socket.on("user:call", ({ to, offer }) => {
