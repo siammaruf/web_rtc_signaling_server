@@ -49,8 +49,8 @@ io.on("connection", (socket)=>{
         }
     });
 
-    socket.on("user:call", ({ fromId, to, offer }) => {
-        io.to(to).emit("incomming:call", { from: fromId, offer });
+    socket.on("user:call", ({ from, to, offer }) => {
+        io.to(to).emit("incomming:call", { from, offer });
     });
 
     socket.on("call:accepted", ({ to, ans }) => {
